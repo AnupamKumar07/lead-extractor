@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ideanix Lead Engine - Lead Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "primary-dark": "#2563eb",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                        "surface-dark": "#1e293b",
+                        "surface-darker": "#0f172a",
+                        "border-dark": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for table container */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display antialiased min-h-screen flex flex-col">
+<!-- Navbar / Top Header -->
+<nav class="border-b border-gray-200 dark:border-border-dark bg-white dark:bg-surface-darker sticky top-0 z-30">
+<div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16">
+<div class="flex items-center gap-4">
+<!-- Logo -->
+<div class="flex-shrink-0 flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
+<span class="material-icons text-white text-lg">bolt</span>
+</div>
+<span class="font-bold text-lg tracking-tight">Ideanix</span>
+</div>
+<!-- Breadcrumbs & Context -->
+<div class="hidden md:flex items-center ml-6 text-sm text-slate-500 dark:text-slate-400">
+<span class="hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer transition-colors">Workspace</span>
+<span class="material-icons text-base mx-2 text-slate-600 dark:text-slate-600">chevron_right</span>
+<span class="text-slate-900 dark:text-white font-medium">Leads Directory</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<!-- User Profile -->
+<button class="relative p-1 rounded-full text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-surface-darker">
+<span class="sr-only">View notifications</span>
+<span class="material-icons">notifications</span>
+<span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-surface-darker"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-gray-200 dark:border-border-dark">
+<img alt="User avatar" class="h-8 w-8 rounded-full ring-2 ring-primary/20" data-alt="Portrait of a smiling user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc2amjuZvmfuwZTvYu2Augu2oTU4QyQl_5YX8aGlbomt4ZlMJhPXKD9fiEtHahpRQpcS9X8mo-Ug9G0w8ATqEGXXQufHkC8-ZOmk7vfchyikLD9YIgF4v7C4ap0PQIAlneP_g6qlrzE_l8Cx_v5wnfMfiK9GMrBb1nML54EKJm1jsMqo3PzkvRepi_IpagYecmQZ_3swSLrSngbMbccFKWTPpd1I_7mXbtFUB5VKY_x23FDJoLSAyzVOq50tbwmDzDfCHdoO6skzKw"/>
+<div class="hidden lg:block text-xs">
+<p class="font-medium text-slate-900 dark:text-white">Alex Morgan</p>
+<p class="text-slate-500 dark:text-slate-400">Admin</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<!-- Page Header & Controls -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">All Leads</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage and track your AI-generated prospects.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-border-dark shadow-sm text-sm font-medium rounded-lg text-slate-700 dark:text-slate-300 bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+<span class="material-icons text-sm mr-2">upload_file</span>
+                    Import CSV
+                </button>
+<button class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-lg shadow-primary/25">
+<span class="material-icons text-sm mr-2">add</span>
+                    Add New Lead
+                </button>
+</div>
+</div>
+<!-- Filters & Search Toolbar -->
+<div class="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-200 dark:border-border-dark p-4 mb-6">
+<div class="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+<!-- Search -->
+<div class="relative w-full lg:w-96 group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-icons text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-border-dark rounded-lg leading-5 bg-white dark:bg-surface-darker text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm transition-shadow" id="search" name="search" placeholder="Search by company, name, or email..." type="text"/>
+</div>
+<!-- Filters Group -->
+<div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+<!-- Filter: Industry -->
+<div class="relative">
+<button class="flex items-center space-x-2 px-3 py-2 bg-gray-50 dark:bg-surface-darker border border-gray-300 dark:border-border-dark rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons text-base text-slate-400">domain</span>
+<span>Industry</span>
+<span class="material-icons text-base text-slate-400">arrow_drop_down</span>
+</button>
+</div>
+<!-- Filter: Source -->
+<div class="relative">
+<button class="flex items-center space-x-2 px-3 py-2 bg-gray-50 dark:bg-surface-darker border border-gray-300 dark:border-border-dark rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons text-base text-slate-400">link</span>
+<span>Source</span>
+<span class="material-icons text-base text-slate-400">arrow_drop_down</span>
+</button>
+</div>
+<!-- Filter: Score -->
+<div class="relative">
+<button class="flex items-center space-x-2 px-3 py-2 bg-gray-50 dark:bg-surface-darker border border-gray-300 dark:border-border-dark rounded-lg text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-icons text-base text-slate-400">bar_chart</span>
+<span>Score: High</span>
+<span class="material-icons text-base text-slate-400">close</span>
+</button>
+</div>
+<div class="h-6 w-px bg-gray-300 dark:bg-border-dark mx-1 hidden sm:block"></div>
+<!-- Bulk Actions -->
+<div class="relative">
+<button class="flex items-center space-x-2 px-3 py-2 bg-white dark:bg-surface-dark border border-gray-300 dark:border-border-dark rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 cursor-not-allowed opacity-60" disabled="">
+<span>Bulk Actions</span>
+<span class="material-icons text-base">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-white dark:bg-surface-dark shadow-sm border border-gray-200 dark:border-border-dark rounded-xl overflow-hidden flex flex-col h-[calc(100vh-320px)] min-h-[500px]">
+<div class="overflow-x-auto custom-scrollbar flex-1">
+<table class="min-w-full divide-y divide-gray-200 dark:divide-border-dark">
+<thead class="bg-gray-50 dark:bg-surface-darker sticky top-0 z-10">
+<tr>
+<th class="px-6 py-3 text-left w-12" scope="col">
+<div class="flex items-center">
+<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-slate-600 rounded bg-gray-50 dark:bg-surface-darker" id="select-all" type="checkbox"/>
+</div>
+</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Company</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Score</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Status</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Contact Info</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Industry</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Location</th>
+<th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap" scope="col">Source</th>
+<th class="relative px-6 py-3" scope="col">
+<span class="sr-only">Actions</span>
+</th>
+</tr>
+</thead>
+<tbody class="bg-white dark:bg-surface-dark divide-y divide-gray-200 dark:divide-border-dark">
+<!-- Row 1 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-surface-darker/50 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap w-12">
+<div class="flex items-center">
+<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-slate-600 rounded bg-gray-50 dark:bg-surface-darker" type="checkbox"/>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<img alt="TechNova Logo" class="h-10 w-10 rounded-lg object-cover" data-alt="Abstract geometric logo in blue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAskz9-bl7JnFSBF3ExUBrJlb_po-0226nuPUhgRHLMPHmliv8g4wWheBagGM6w6J7sGDsMuEVBnEwvPgZVG-cLBx-xHxszpNrQwjOrl_xeMuNwVUekqn9U0JPHf0iameFS6RBTG61MModjd1Q3kTkCOeK2MB-KSve4IFspDOJKl-DpaCpgI1uQrBqn9fqsTsXGZ7bIx-KS6lDhyTqXZVxRExF2DeCtmldlkrWhOvPUzrClkvGyilXlsQN0w5uUsYxcYIh7bXFwRwnG"/>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-slate-900 dark:text-white">TechNova Systems</div>
+<div class="text-xs text-slate-500 dark:text-slate-400">technova.io</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="relative flex items-center justify-center w-9 h-9 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-sm ring-1 ring-inset ring-emerald-500/20">
+                                        92
+                                    </div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50">
+                                    Qualified
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+                                    sarah.j@technova.io
+                                    <span class="material-icons text-[10px] opacity-0 group-hover:opacity-100">content_copy</span>
+</div>
+<div class="text-xs text-slate-500 dark:text-slate-400">+1 (555) 001-2834</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300">SaaS / Enterprise</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300 flex items-center gap-1">
+<span class="material-icons text-slate-400 text-sm">place</span>
+                                    Austin, TX
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                    LinkedIn
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-surface-darker/50 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap w-12">
+<div class="flex items-center">
+<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-slate-600 rounded bg-gray-50 dark:bg-surface-darker" type="checkbox"/>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<img alt="GreenField Logo" class="h-10 w-10 rounded-lg object-cover" data-alt="Green leaf abstract logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfiY-ZghxkS-zjqoqBzUML6yoztMp4YgSw02XGs3IfgeaSr693imWptlgfdFp808EuhzOohvfODQoBoJ03FHytRXjCZz1cl7FkrOXHXHNxK3CHfw8XFAvmGZHgZeHO6PDlU-T4WTHsAfBvT_PQ9VXdp1NTP436qfcvON4BoDLX2iUuMll-4BoLICJOdnp63i2tJYSRT0q4IJqeuu0x2eoqxvT5yt5GLebGQF7eRew0Xs0PQkdpACsnpDJFU5-4731MKuDZ7RrZDrua"/>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-slate-900 dark:text-white">GreenField Energy</div>
+<div class="text-xs text-slate-500 dark:text-slate-400">greenfield.energy</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="relative flex items-center justify-center w-9 h-9 rounded-full bg-red-500/10 dark:bg-red-500/20 text-red-600 dark:text-red-400 font-bold text-sm ring-1 ring-inset ring-red-500/20">
+                                        45
+                                    </div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700/50 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                    New Lead
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+                                    info@greenfield.energy
+                                </div>
+<div class="text-xs text-slate-500 dark:text-slate-400">+1 (303) 555-9821</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300">Clean Tech</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300 flex items-center gap-1">
+<span class="material-icons text-slate-400 text-sm">place</span>
+                                    Denver, CO
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                                    Inbound
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-surface-darker/50 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap w-12">
+<div class="flex items-center">
+<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-slate-600 rounded bg-gray-50 dark:bg-surface-darker" type="checkbox"/>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<img alt="Nexus AI Logo" class="h-10 w-10 rounded-lg object-cover" data-alt="Modern geometric purple logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN7S7-EVstXC3ZDaNTGw_VBfB0wBHJxRHyiZd58IOxAzG7jcirOknlHg6B7wuKP0PN0rlE8JsAMaEAkBARDS9Xfq1Uw1NnyhhZlQM0OYWyE6ybL0YzyGWdUAyTp_7QjOcRFqOFhpN8jNSXl8k4BK7PupL2OLJUEjLaA90Y-KVBWRH-CQpGRm15YAJhvSvXn5IDZzEEZr9b4Q--yvoS_sz91hVhaD09PAo9HBqzxB8zwlRjOrXloxUpNA5PoqP_eJWrpK5X_89WdWY9"/>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-slate-900 dark:text-white">Nexus AI Solutions</div>
+<div class="text-xs text-slate-500 dark:text-slate-400">nexus.ai</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="relative flex items-center justify-center w-9 h-9 rounded-full bg-yellow-500/10 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 font-bold text-sm ring-1 ring-inset ring-yellow-500/20">
+                                        78
+                                    </div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-200 dark:border-purple-800/50">
+                                    Contacted
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+                                    sales@nexus.ai
+                                </div>
+<div class="text-xs text-slate-500 dark:text-slate-400">+1 (415) 555-0192</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300">Artificial Intelligence</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300 flex items-center gap-1">
+<span class="material-icons text-slate-400 text-sm">place</span>
+                                    San Francisco, CA
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                    Cold Email
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-surface-darker/50 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap w-12">
+<div class="flex items-center">
+<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-slate-600 rounded bg-gray-50 dark:bg-surface-darker" type="checkbox"/>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<img alt="Apex Logistics Logo" class="h-10 w-10 rounded-lg object-cover" data-alt="Blue triangle logistics logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX5gQg9VYYQ-lbHiuRJHINSe6Q2W_BMZU8DQuLdH-fYIIuhGVxXDAyupIW8TA3KfPL2Ii5rmJtCELY-zIHm4HtHVdK1fIFMDU-okvZVLk8eTrBEqtsB7a_nx2A6ihSy-YvV096-CT8W4_zbvncsCaG290cxzcHvU8zLlP33qVQ5tj79oAQ6eyBIm_oIzgxQX-iPe4zo1N59csSYz3zxZBk7ZRR1rL6Zk89XYgqfKs3tWxuhghfjZJ0m-e0QaAIojAV8ZKTDZMX3mQD"/>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-slate-900 dark:text-white">Apex Logistics</div>
+<div class="text-xs text-slate-500 dark:text-slate-400">apexlogistics.com</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="relative flex items-center justify-center w-9 h-9 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-sm ring-1 ring-inset ring-emerald-500/20">
+                                        88
+                                    </div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50">
+                                    Negotiation
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+                                    m.roberts@apexlogistics.com
+                                </div>
+<div class="text-xs text-slate-500 dark:text-slate-400">+1 (206) 555-8821</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300">Supply Chain</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300 flex items-center gap-1">
+<span class="material-icons text-slate-400 text-sm">place</span>
+                                    Seattle, WA
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                    LinkedIn
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-gray-50 dark:hover:bg-surface-darker/50 transition-colors group">
+<td class="px-6 py-4 whitespace-nowrap w-12">
+<div class="flex items-center">
+<input class="h-4 w-4 text-primary focus:ring-primary border-gray-300 dark:border-slate-600 rounded bg-gray-50 dark:bg-surface-darker" type="checkbox"/>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="flex-shrink-0 h-10 w-10">
+<img alt="Bright Finance Logo" class="h-10 w-10 rounded-lg object-cover" data-alt="Blue building logo for finance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4wpFPAKkt52cF-T4RKmgywN41oeOnOb9kzeidguibgRsHiZB5JR23DQDfrHzrkrY-gnwRdaQWSBTtdqPFJVQjO-wf-W3iTC2WwT9S0BkAhSXmXyDZMpfVgu4vq8R7svZPcRTlhsQj9yJxd_jOZoT57jX_7_VuJcKTBrRE16SkfHdDiHrkAUraCQwR-7zVv83ZqzAs4Ak37MKiSn0pNR6mg0tyvQNA8QNx8BKkdWUnxXg-hjc6JbDWKnwpsL13ULBCulB7p1ZtaWwZ"/>
+</div>
+<div class="ml-4">
+<div class="text-sm font-medium text-slate-900 dark:text-white">Bright Finance</div>
+<div class="text-xs text-slate-500 dark:text-slate-400">brightfi.co</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="flex items-center">
+<div class="relative flex items-center justify-center w-9 h-9 rounded-full bg-yellow-500/10 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 font-bold text-sm ring-1 ring-inset ring-yellow-500/20">
+                                        65
+                                    </div>
+</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700/50 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                    New Lead
+                                </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors cursor-pointer flex items-center gap-1">
+                                    hello@brightfi.co
+                                </div>
+<div class="text-xs text-slate-500 dark:text-slate-400">+1 (212) 555-1234</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300">FinTech</div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap">
+<div class="text-sm text-slate-500 dark:text-slate-300 flex items-center gap-1">
+<span class="material-icons text-slate-400 text-sm">place</span>
+                                    New York, NY
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-pink-500"></span>
+                                    Webinar
+                                </div>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="bg-gray-50 dark:bg-surface-darker px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-border-dark">
+<div class="flex-1 flex justify-between sm:hidden">
+<a class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-border-dark text-sm font-medium rounded-md text-slate-700 dark:text-slate-300 bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-gray-800" href="#"> Previous </a>
+<a class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-border-dark text-sm font-medium rounded-md text-slate-700 dark:text-slate-300 bg-white dark:bg-surface-dark hover:bg-gray-50 dark:hover:bg-gray-800" href="#"> Next </a>
+</div>
+<div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+<div>
+<p class="text-sm text-slate-500 dark:text-slate-400">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">2,493</span> results
+                        </p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<label class="text-xs text-slate-500 dark:text-slate-400" for="rows-per-page">Rows per page:</label>
+<select class="block w-16 pl-2 pr-6 py-1 text-xs border-gray-300 dark:border-border-dark focus:outline-none focus:ring-primary focus:border-primary sm:text-xs rounded-md bg-white dark:bg-surface-dark text-slate-700 dark:text-slate-300" id="rows-per-page">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+<nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+<a class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800" href="#">
+<span class="sr-only">Previous</span>
+<span class="material-icons text-sm">chevron_left</span>
+</a>
+<a aria-current="page" class="z-10 bg-primary/10 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#"> 1 </a>
+<a class="bg-white dark:bg-surface-dark border-gray-300 dark:border-border-dark text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#"> 2 </a>
+<a class="bg-white dark:bg-surface-dark border-gray-300 dark:border-border-dark text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium" href="#"> 3 </a>
+<span class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark text-sm font-medium text-slate-700 dark:text-slate-400"> ... </span>
+<a class="bg-white dark:bg-surface-dark border-gray-300 dark:border-border-dark text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium" href="#"> 8 </a>
+<a class="bg-white dark:bg-surface-dark border-gray-300 dark:border-border-dark text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#"> 9 </a>
+<a class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800" href="#">
+<span class="sr-only">Next</span>
+<span class="material-icons text-sm">chevron_right</span>
+</a>
+</nav>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

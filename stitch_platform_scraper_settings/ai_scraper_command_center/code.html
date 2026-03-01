@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Scraper Command Center - Ideanix Lead Engine</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3c83f6",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                        "card-dark": "#1a2433",
+                        "terminal-bg": "#0d1117",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .pulsate-ring {
+            animation: pulsate 2s infinite;
+        }
+        @keyframes pulsate {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(60, 131, 246, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(60, 131, 246, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(60, 131, 246, 0); }
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Custom scrollbar for terminal */
+        .terminal-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .terminal-scroll::-webkit-scrollbar-track {
+            background: #0d1117; 
+        }
+        .terminal-scroll::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        .terminal-scroll::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display min-h-screen flex overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-white dark:bg-[#151e2b] border-r border-slate-200 dark:border-slate-800 flex-col hidden lg:flex z-20">
+<div class="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center">
+<span class="material-icons text-white text-lg">all_inclusive</span>
+</div>
+<span class="font-bold text-lg dark:text-white tracking-tight">Ideanix</span>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-[20px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-[20px]">people_alt</span>
+                Leads CRM
+            </a>
+<div class="pt-4 pb-2 px-3">
+<p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Engine Control</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary dark:text-primary" href="#">
+<span class="material-icons text-[20px]">precision_manufacturing</span>
+                Scraper Command
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-[20px]">settings_input_component</span>
+                Sources Config
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-[20px]">vpn_key</span>
+                Proxy Manager
+            </a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3">
+<img class="w-9 h-9 rounded-full border border-slate-200 dark:border-slate-700" data-alt="User profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJJR8aPj1HzooglZkOqK98i59UD8GqZM7Zx_FGyBqJJe7-_zLhWiNXscquXqrcc6JCNnlIKU3oxvzzhfZqNbRRLO3zmjUNsyo_l4s8-gb5IGtLKilJlFxEkNVmA0T08r-dtSZrEiVFaYeXzCQJP10baqgktxEdtQaI6ggdskmoufV82lJ6SP-7V1YonQy_Zg5e04SqGmikV_PJLDlAw5xsdTUsZ91hUd3-bngsm3SOt16K1iFKTYdfsm1svBmZ7WQDZMUfm-xlESKv"/>
+<div class="flex-1 min-w-0">
+<p class="text-sm font-medium text-slate-900 dark:text-white truncate">Alex Morgan</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 truncate">Lead Engineer</p>
+</div>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+<span class="material-icons text-[20px]">logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+<!-- Top Header -->
+<header class="h-16 bg-white dark:bg-[#151e2b] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-10 shrink-0">
+<div class="flex items-center gap-4">
+<button class="lg:hidden p-2 -ml-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+<span class="material-icons">menu</span>
+</button>
+<nav aria-label="Breadcrumb" class="flex">
+<ol class="flex items-center space-x-2">
+<li><a class="text-slate-400 hover:text-slate-500 dark:text-slate-500 dark:hover:text-slate-400" href="#"><span class="material-icons text-sm">home</span></a></li>
+<li><span class="text-slate-300 dark:text-slate-600">/</span></li>
+<li><a class="text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200" href="#">Engine</a></li>
+<li><span class="text-slate-300 dark:text-slate-600">/</span></li>
+<li><span aria-current="page" class="text-sm font-medium text-primary">Command Center</span></li>
+</ol>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="text-xs font-mono text-emerald-500 font-semibold tracking-wider">SYSTEM ONLINE</span>
+</div>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-auto p-6 space-y-6">
+<!-- Control Plane (Top Half) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+<!-- Main Control Card -->
+<div class="xl:col-span-4 bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-slate-800 p-6 flex flex-col justify-between shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons text-[120px] text-primary transform rotate-12 translate-x-8 -translate-y-8">settings_power</span>
+</div>
+<div class="flex justify-between items-start z-10">
+<div>
+<h2 class="text-lg font-semibold text-slate-900 dark:text-white">Engine Status</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Control AI extraction process</p>
+</div>
+<div class="bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold border border-emerald-500/20">
+                            RUNNING
+                        </div>
+</div>
+<div class="flex items-center justify-center py-8 z-10">
+<div class="relative">
+<div class="pulsate-ring absolute inset-0 rounded-full bg-primary/30"></div>
+<button class="relative w-24 h-24 rounded-full bg-primary hover:bg-blue-600 transition-all duration-300 shadow-lg shadow-blue-500/40 flex items-center justify-center group active:scale-95">
+<span class="material-icons text-white text-4xl">power_settings_new</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-2 z-10">
+<div class="bg-background-light dark:bg-background-dark rounded-lg p-3 border border-slate-200 dark:border-slate-700/50">
+<span class="text-xs text-slate-500 dark:text-slate-500 block">Session ID</span>
+<span class="font-mono text-sm font-semibold dark:text-slate-300">#IDX-9921</span>
+</div>
+<div class="bg-background-light dark:bg-background-dark rounded-lg p-3 border border-slate-200 dark:border-slate-700/50">
+<span class="text-xs text-slate-500 dark:text-slate-500 block">Uptime</span>
+<span class="font-mono text-sm font-semibold dark:text-slate-300">04:21:12</span>
+</div>
+</div>
+</div>
+<!-- Metrics & Schedule Column -->
+<div class="xl:col-span-8 flex flex-col gap-6">
+<!-- Metrics Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Leads Metric -->
+<div class="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-500/10 rounded-lg">
+<span class="material-icons text-blue-500">person_add_alt</span>
+</div>
+<span class="flex items-center text-xs font-medium text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded">
+                                    +12.5% <span class="material-icons text-[14px] ml-1">trending_up</span>
+</span>
+</div>
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white font-display">1,248</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Leads Scraped Today</p>
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full mt-4 overflow-hidden">
+<div class="bg-blue-500 h-1.5 rounded-full" style="width: 65%"></div>
+</div>
+</div>
+<!-- Success Rate Metric -->
+<div class="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-violet-500/10 rounded-lg">
+<span class="material-icons text-violet-500">verified</span>
+</div>
+</div>
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white font-display">98.5%</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Success Rate</p>
+<div class="flex gap-1 mt-4">
+<div class="h-1.5 flex-1 bg-violet-500 rounded-full"></div>
+<div class="h-1.5 flex-1 bg-violet-500 rounded-full"></div>
+<div class="h-1.5 flex-1 bg-violet-500 rounded-full"></div>
+<div class="h-1.5 flex-1 bg-violet-500/30 rounded-full"></div>
+</div>
+</div>
+<!-- Schedule/Next Run -->
+<div class="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-orange-500/10 rounded-lg">
+<span class="material-icons text-orange-500">schedule</span>
+</div>
+<button class="text-xs text-primary hover:underline">Edit Schedule</button>
+</div>
+<div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white font-mono mt-2">02:00 UTC</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400">Next scheduled run</p>
+</div>
+<div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+<span class="text-xs text-slate-500">Frequency:</span>
+<span class="text-xs font-semibold bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300">Daily</span>
+</div>
+</div>
+</div>
+<!-- Config Quick Actions (Optional mid-bar) -->
+<div class="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-slate-800 p-4 flex items-center justify-between gap-4 shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-icons text-slate-400">tune</span>
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Active Profile: <span class="text-white">Tech SaaS Extraction</span></span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-500 mr-2">Throttle: 45 req/m</span>
+<div class="h-4 w-px bg-slate-700"></div>
+<span class="text-xs text-slate-500 ml-2">Proxies: Rotating (US)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Data Plane (Bottom Half - Logs) -->
+<div class="flex-1 flex flex-col min-h-[400px] bg-[#0d1117] rounded-xl border border-slate-800 overflow-hidden shadow-lg">
+<!-- Log Header -->
+<div class="flex items-center justify-between px-4 py-2 bg-[#161b22] border-b border-slate-800">
+<div class="flex items-center gap-3">
+<span class="material-icons text-slate-500 text-sm">terminal</span>
+<span class="text-xs font-mono font-medium text-slate-300">Live Execution Logs</span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors" title="Clear Console">
+<span class="material-icons text-[16px]">block</span>
+</button>
+<button class="p-1 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors" title="Copy All">
+<span class="material-icons text-[16px]">content_copy</span>
+</button>
+<button class="p-1 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors" title="Download Log">
+<span class="material-icons text-[16px]">download</span>
+</button>
+</div>
+</div>
+<!-- Terminal Content -->
+<div class="flex-1 p-4 font-mono text-xs md:text-sm overflow-y-auto terminal-scroll bg-[#0d1117]">
+<div class="space-y-1">
+<!-- Log Entry -->
+<div class="flex gap-3 text-slate-400 hover:bg-[#161b22] px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:41]</span>
+<span class="text-blue-400 shrink-0">INFO</span>
+<span class="text-slate-300">Initializing extraction sequence for target <span class="text-yellow-300">linkedin.com/search/results</span></span>
+</div>
+<!-- Log Entry -->
+<div class="flex gap-3 text-slate-400 hover:bg-[#161b22] px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:42]</span>
+<span class="text-blue-400 shrink-0">INFO</span>
+<span class="text-slate-300">Proxy chain established. Node: <span class="text-slate-500">us-east-14.proxy-mesh</span></span>
+</div>
+<!-- Log Entry JSON -->
+<div class="flex gap-3 text-slate-400 hover:bg-[#161b22] px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:44]</span>
+<span class="text-emerald-400 shrink-0">SUCCESS</span>
+<span class="text-slate-300">Profile extracted successfully.</span>
+</div>
+<div class="pl-[104px] text-slate-500 text-xs pb-2">
+<pre class="whitespace-pre-wrap"><span class="text-purple-400">{</span>
+  <span class="text-blue-300">"id"</span>: <span class="text-orange-300">"li_99214"</span>,
+  <span class="text-blue-300">"name"</span>: <span class="text-emerald-300">"Sarah Jenkins"</span>,
+  <span class="text-blue-300">"role"</span>: <span class="text-emerald-300">"VP of Engineering"</span>,
+  <span class="text-blue-300">"company"</span>: <span class="text-emerald-300">"CloudScale Inc"</span>,
+  <span class="text-blue-300">"email_confidence"</span>: <span class="text-blue-400">0.92</span>
+<span class="text-purple-400">}</span></pre>
+</div>
+<!-- Log Entry -->
+<div class="flex gap-3 text-slate-400 hover:bg-[#161b22] px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:45]</span>
+<span class="text-blue-400 shrink-0">INFO</span>
+<span class="text-slate-300">Paginating to results page 2...</span>
+</div>
+<!-- Log Entry Warning -->
+<div class="flex gap-3 text-slate-400 hover:bg-[#161b22] px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:48]</span>
+<span class="text-yellow-500 shrink-0">WARN</span>
+<span class="text-slate-300">Rate limit heuristic detected. Increasing delay to 2500ms.</span>
+</div>
+<!-- Log Entry -->
+<div class="flex gap-3 text-slate-400 hover:bg-[#161b22] px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:51]</span>
+<span class="text-blue-400 shrink-0">INFO</span>
+<span class="text-slate-300">Parsing DOM elements: <span class="text-purple-300">.entity-result__title-text</span></span>
+</div>
+<!-- Log Entry JSON -->
+<div class="flex gap-3 text-slate-400 hover:bg-[#161b22] px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:53]</span>
+<span class="text-emerald-400 shrink-0">SUCCESS</span>
+<span class="text-slate-300">Batch processing complete (5 items).</span>
+</div>
+<div class="pl-[104px] text-slate-500 text-xs pb-2">
+<pre class="whitespace-pre-wrap"><span class="text-purple-400">[</span>
+  <span class="text-purple-400">{</span> <span class="text-blue-300">"company"</span>: <span class="text-emerald-300">"TechCorp"</span>, <span class="text-blue-300">"leads"</span>: <span class="text-blue-400">3</span> <span class="text-purple-400">}</span>,
+  <span class="text-purple-400">{</span> <span class="text-blue-300">"company"</span>: <span class="text-emerald-300">"StartUp.io"</span>, <span class="text-blue-300">"leads"</span>: <span class="text-blue-400">2</span> <span class="text-purple-400">}</span>
+<span class="text-purple-400">]</span></pre>
+</div>
+<!-- Cursor -->
+<div class="flex gap-3 px-2 py-0.5 rounded -mx-2">
+<span class="text-slate-600 shrink-0">[14:02:54]</span>
+<span class="text-slate-500 shrink-0">....</span>
+<span class="text-slate-300 animate-pulse">_</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
