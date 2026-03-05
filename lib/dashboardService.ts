@@ -1,33 +1,58 @@
 import { createClient } from '@/lib/supabaseClient'
 
 export async function getDashboardStats() {
+
     const supabase = createClient()
 
-    const [
-        { count: totalLeads },
-        { count: qualifiedLeads },
-        { count: contactedLeads },
-        { count: convertedLeads },
-        { count: highValueLeads },
-        { data: recentLeads }
-    ] = await Promise.all([
-        supabase.from('leads').select('*', { count: 'exact', head: true }),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'qualified'),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'contacted'),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'converted'),
-        supabase.from('leads').select('*', { count: 'exact', head: true }).gt('lead_score', 80),
-        supabase.from('leads').select('*, companies(*)').order('created_at', { ascending: false }).limit(5)
-    ])
+    const { data: leads, error } = await supabase
+        .from('leads')
+        .select('*')
 
-    const total = totalLeads || 0
-    const conversionRate = total > 0 ? (((convertedLeads || 0) / total) * 100).toFixed(1) + '%' : '0%'
+    if (error) {
+        console.error('Error fetching leads:', error)
+
+        return {
+            totalLeads: 0,
+            qualifiedLeads: 0,
+            contactedLeads: 0,
+            highValueLeads: 0,
+            conversionRate: '0%',
+            recentLeads: []
+        }
+    }
+
+    const totalLeads = leads?.length || 0
+
+    const qualifiedLeads =
+        leads?.filter(l => l.status === 'qualified').length || 0
+
+    const contactedLeads =
+        leads?.filter(l => l.status === 'contacted').length || 0
+
+    const convertedLeads =
+        leads?.filter(l => l.status === 'converted').length || 0
+
+    const highValueLeads =
+        leads?.filter(l => l.lead_score > 80).length || 0
+
+    const conversionRate =
+        totalLeads > 0
+            ? ((convertedLeads / totalLeads) * 100).toFixed(1) + '%'
+            : '0%'
+
+    const recentLeads =
+        leads
+            ?.sort((a, b) =>
+                new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            )
+            .slice(0, 5) || []
 
     return {
-        totalLeads: total,
-        qualifiedLeads: qualifiedLeads || 0,
-        contactedLeads: contactedLeads || 0,
-        highValueLeads: highValueLeads || 0,
+        totalLeads,
+        qualifiedLeads,
+        contactedLeads,
+        highValueLeads,
         conversionRate,
-        recentLeads: recentLeads || []
+        recentLeads
     }
 }
